@@ -208,7 +208,6 @@ public class Player extends Sprite implements IPlayer {
     protected function playerReady(evt:PlayerEvent):void {
         // Only handle Setup Events once
         _controller.removeEventListener(PlayerEvent.JWPLAYER_READY, playerReady);
-        _controller.removeEventListener(PlayerEvent.JWPLAYER_SETUP_ERROR, setupError);
 
         // Forward all MVC events
         _model.addGlobalListener(globalHandler);
