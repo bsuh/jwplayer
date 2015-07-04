@@ -199,13 +199,15 @@
         function _load(file, index) {
             utils.ajax(file, function(xmlEvent) {
                 _xmlReadHandler(xmlEvent, index);
-            }, _xmlFailedHandler, true);
+            }, _xmlFailedHandler, true, true);
         }
 
         function _xmlReadHandler(xmlEvent, index) {
             var rss = xmlEvent.responseXML ? xmlEvent.responseXML.firstChild : null,
                 parser;
-            _dlCount++;
+            if (xmlEvent.readyState === 4) {
+                _dlCount++;
+            }
             // IE9 sets the firstChild element to the root <xml> tag
 
             if (rss) {
@@ -232,11 +234,13 @@
                 _errorHandler(e.message + ': ' + _tracks[index].file);
             }
 
-            if (_dlCount === _tracks.length) {
-                if (_waiting > 0) {
-                    _renderCaptions(_waiting);
+            if (_waiting > 0) {
+                _renderCaptions(_waiting);
+                if (xmlEvent.readyState === 4) {
                     _waiting = -1;
                 }
+            }
+            if (_dlCount === _tracks.length) {
                 sendAll();
             }
         }
@@ -244,9 +248,11 @@
         function _xmlFailedHandler(message) {
             _dlCount++;
             _errorHandler(message);
+            if (_waiting > 0) {
+                _renderCaptions(_waiting);
+            }
             if (_dlCount === _tracks.length) {
                 if (_waiting > 0) {
-                    _renderCaptions(_waiting);
                     _waiting = -1;
                 }
                 sendAll();

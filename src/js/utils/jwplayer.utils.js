@@ -476,7 +476,7 @@
     };
 
     /** Loads an XML file into a DOM object * */
-    utils.ajax = function(xmldocpath, completecallback, errorcallback, donotparse) {
+    utils.ajax = function(xmldocpath, completecallback, errorcallback, donotparse, callonprogress) {
         var xmlhttp;
         var isError = false;
         // Hash tags should be removed from the URL since they can't be loaded in IE
@@ -494,7 +494,8 @@
             // Firefox, Chrome, Opera, Safari
             xmlhttp = new window.XMLHttpRequest();
             xmlhttp.onreadystatechange =
-                _readyStateChangeHandler(xmlhttp, xmldocpath, completecallback, errorcallback, donotparse);
+            _readyStateChangeHandler(xmlhttp, xmldocpath, completecallback, errorcallback, donotparse,
+                                     callonprogress);
         } else {
             if (errorcallback) {
                 errorcallback('', xmldocpath, xmlhttp);
@@ -543,7 +544,8 @@
         };
     }
 
-    function _readyStateChangeHandler(xmlhttp, xmldocpath, completecallback, errorcallback, donotparse) {
+    function _readyStateChangeHandler(xmlhttp, xmldocpath, completecallback, errorcallback, donotparse,
+                                      callonprogress) {
         return function() {
             if (xmlhttp.readyState === 4) {
                 switch (xmlhttp.status) {
@@ -554,6 +556,8 @@
                         errorcallback('File not found', xmldocpath, xmlhttp);
                 }
 
+            } else if (xmlhttp.readyState === 3 && callonprogress) {
+                _ajaxComplete(xmlhttp, xmldocpath, completecallback, errorcallback, donotparse)();
             }
         };
     }
