@@ -476,7 +476,8 @@
                 bottom: margin,
                 left: margin,
                 right: margin,
-                'max-width': _audioMode ? '' : _settings.maxwidth
+                'max-width': _audioMode ? '' : _settings.maxwidth,
+                'z-index': 1
             };
             _css.style(_controlbar, styles);
 

@@ -104,6 +104,9 @@
                 case states.IDLE:
                     _idleHandler();
                     break;
+                case states.PAUSED:
+                    _renderer.pause();
+                    break;
                 case states.PLAYING:
                     _playHandler();
                     break;
@@ -119,7 +122,7 @@
             } else {
                 _redraw(true);
             }
-
+            _renderer.fullscreen(event.fullscreen);
         }
 
         function _fullscreenResize() {
@@ -197,37 +200,30 @@
 
         /** Load captions. **/
         function _load(file, index) {
-            utils.ajax(file, function(xmlEvent) {
-                _xmlReadHandler(xmlEvent, index);
-            }, _xmlFailedHandler, true, true);
+            var xhr = new XMLHttpRequest();
+            var streamParser = new libjass.parser.StreamParser(
+                new libjass.parser.XhrStream(xhr));
+
+            streamParser.minimalASS.then(function (ass) {
+                _xmlReadHandler(ass, index);
+            });
+
+            streamParser.ass.then(function (ass) {
+                _xmlReadHandler(ass, index, true);
+            }, function (reason) {
+                _xmlFailedHandler(reason);
+            });
+
+            xhr.open('GET', file, true);
+            xhr.send();
         }
 
-        function _xmlReadHandler(xmlEvent, index) {
-            var rss = xmlEvent.responseXML ? xmlEvent.responseXML.firstChild : null,
-                parser;
-            if (xmlEvent.readyState === 4) {
-                _dlCount++;
-            }
-            // IE9 sets the firstChild element to the root <xml> tag
+        function _xmlReadHandler(ass, index, finished) {
+            _dlCount++;
 
-            if (rss) {
-                if (parsers.localName(rss) === 'xml') {
-                    rss = rss.nextSibling;
-                }
-                // Ignore all comments
-                while (rss.nodeType === rss.COMMENT_NODE) {
-                    rss = rss.nextSibling;
-                }
-            }
-            if (rss && parsers.localName(rss) === 'tt') {
-                parser = new jwplayer.parsers.dfxp();
-            } else {
-                parser = new jwplayer.parsers.srt();
-            }
             try {
-                var data = parser.parse(xmlEvent.responseText);
                 if (_track < _tracks.length) {
-                    _tracks[index].data = data;
+                    _tracks[index].data = ass;
                 }
                 _redraw(false);
             } catch (e) {
@@ -236,7 +232,7 @@
 
             if (_waiting > 0) {
                 _renderCaptions(_waiting);
-                if (xmlEvent.readyState === 4) {
+                if (finished) {
                     _waiting = -1;
                 }
             }
@@ -274,6 +270,7 @@
         /** Player started playing. **/
         function _playHandler() {
             _state = PLAYING;
+            _renderer.play();
             _redraw(false);
         }
 
@@ -318,7 +315,7 @@
             });
 
             // Place renderer and selector.
-            _renderer = new jwplayer.html5.captions.renderer(_options, _display);
+            _renderer = new jwplayer.html5.captions.renderer(_display);
             _redraw(false);
         }
 
