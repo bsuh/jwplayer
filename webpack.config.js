@@ -119,6 +119,10 @@ var multiConfig = _.compact(_.map([
         module: {
             loaders: [
                 {
+                    test: /\.css$/,
+                    loader: 'simple-style-loader!css?minimize'
+                },
+                {
                     test: /\.less$/,
                     loaders: [
                         'simple-style-loader',
