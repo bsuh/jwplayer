@@ -6,6 +6,8 @@ import { version } from './version';
 import Api from 'api/api';
 import ApiSettings from 'api/api-settings';
 
+require('libjass.css');
+
 /* global __webpack_public_path__:true*/
 /* eslint camelcase: 0 */
 __webpack_public_path__ = loadFrom();

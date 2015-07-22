@@ -105,11 +105,16 @@ const multiConfig = [
             modules: [
                 'src/js/',
                 'src',
-                'node_modules'
+                'node_modules',
+                'libjass'
             ]
         },
         module: {
             rules: [
+                {
+                    test: /\.css$/,
+                    loader: 'simple-style-loader!css-loader?minimize'
+                },
                 {
                     test: /\.less$/,
                     use: [
