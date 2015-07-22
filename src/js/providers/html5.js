@@ -46,11 +46,8 @@ function VideoProvider(_playerId, _playerConfig, mediaElement) {
     // The following issues need to be addressed before we enable native rendering in Edge:
     // https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/8120475/
     // https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/12079271/
-    function renderNatively (configRenderNatively) {
-        if (OS.iOS || Browser.safari) {
-            return true;
-        }
-        return configRenderNatively && Browser.chrome;
+    function renderNatively () {
+        return false;
     }
 
     const _this = this;

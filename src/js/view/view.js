@@ -195,7 +195,7 @@ function View(_api, _model) {
         _playerElement.insertBefore(_captionsRenderer.element(), _title.element());
 
         // Display Click and Double Click Handling
-        displayClickHandler = clickHandlerHelper(_api, _model, _videoLayer);
+        displayClickHandler = clickHandlerHelper(_api, _model, _captionsRenderer.element());
 
         focusHelper = flagNoFocus(_playerElement);
         fullscreenHelpers = requestFullscreenHelper(_playerElement, document, _fullscreenChangeHandler);

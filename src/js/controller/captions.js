@@ -82,7 +82,6 @@ const Captions = function(_model) {
     }
 
     function _addTrack(track) {
-        track.data = track.data || [];
         track.name = track.label || track.name || track.language;
         track._id = createId(track, _tracks.length);
 
