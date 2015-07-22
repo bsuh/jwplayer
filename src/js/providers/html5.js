@@ -48,7 +48,7 @@ define([
 
         _.extend(this, Events, Tracks);
 
-        this.renderNatively = utils.isChrome() || utils.isIOS() || utils.isSafari() || utils.isEdge();
+        this.renderNatively = false;
 
         // Overwrite the event dispatchers to block on certain occasions
         this.trigger = function(type, args) {
