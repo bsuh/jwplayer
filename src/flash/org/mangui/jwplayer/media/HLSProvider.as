@@ -77,7 +77,7 @@ package org.mangui.jwplayer.media {
             _hls.addEventListener(HLSEvent.MEDIA_TIME, _mediaTimeHandler);
             /* start playback on manifest load */
             if (item.start != 0) {
-                _hls.stream.seek(item.start);
+                _hls.stream.play(null, item.start);
             } else {
                 _hls.stream.play();
             }
