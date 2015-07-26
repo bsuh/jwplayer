@@ -19,6 +19,7 @@ public dynamic class PlayerConfig extends EventDispatcher {
     protected var _fullscreen:Boolean = false;
     protected var _plugins:Array = [];
     protected var _pluginConfig:Object = {};
+    protected var _originalConfig:Object = {};
 
     protected var _soundTransform:SoundTransform;
     protected var _volume:Number = 0.9;
@@ -232,6 +233,10 @@ public dynamic class PlayerConfig extends EventDispatcher {
         Mouse.cursor = (_controls) ? MouseCursor.BUTTON : MouseCursor.AUTO;
     }
 
+    public function get originalConfig():Object {
+        return _originalConfig;
+    }
+
     public function setConfig(config:Object):void {
         // add dynamic properties from js config
         for (var key:String in config) {
@@ -256,6 +261,8 @@ public dynamic class PlayerConfig extends EventDispatcher {
 
         this.captionLabel = config.captionLabel;
         this.qualityLabel = config.qualityLabel;
+
+        this._originalConfig = config;
     }
 
     /** Returns a PluginConfig containing plugin configuration information **/

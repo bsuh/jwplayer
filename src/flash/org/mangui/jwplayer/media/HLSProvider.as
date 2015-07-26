@@ -153,7 +153,7 @@ package org.mangui.jwplayer.media {
             //_hls.addEventListener(HLSEvent.AUDIO_ONLY, _audioHandler);
 
             // Allow stagevideo to be disabled by user config
-            if (cfg.hasOwnProperty('stagevideo') && cfg['stagevideo'].toString() == "false") {
+            if (cfg.originalConfig.hasOwnProperty('stagevideo') && cfg.originalConfig['stagevideo'].toString() == "false") {
                 _stageEnabled = false;
             }
             _video = new Video(320, 240);
@@ -172,78 +172,78 @@ package org.mangui.jwplayer.media {
             var value : Object;
 
             // parse configuration parameters
-            value = cfg.hls_debug;
+            value = cfg.originalConfig.hls_debug;
             if (value != null) {
                 Log.info("hls_debug:" + value);
                 HLSSettings.logDebug = value as Boolean;
             }
 
-            value = cfg.hls_debug2;
+            value = cfg.originalConfig.hls_debug2;
             if (value != null) {
                 Log.info("hls_debug2:" + value);
                 HLSSettings.logDebug2 = value as Boolean;
             }
 
-            value = cfg.hls_minbufferlength;
+            value = cfg.originalConfig.hls_minbufferlength;
             if (value != null) {
                 Log.info("hls_minbufferlength:" + value);
                 HLSSettings.minBufferLength = value as Number;
             }
 
-            value = cfg.hls_maxbufferlength;
+            value = cfg.originalConfig.hls_maxbufferlength;
             if (value != null) {
                 Log.info("hls_maxbufferlength:" + value);
                 HLSSettings.maxBufferLength = value as Number;
             }
 
-            value = cfg.hls_lowbufferlength;
+            value = cfg.originalConfig.hls_lowbufferlength;
             if (value != null) {
                 Log.info("hls_lowbufferlength:" + value);
                 HLSSettings.lowBufferLength = value as Number;
             }
 
-            value = cfg.hls_startfromlevel;
+            value = cfg.originalConfig.hls_startfromlevel;
             if (value != null) {
                 Log.info("hls_startfromlevel:" + value);
                 HLSSettings.startFromLevel = value as Number;
             }
 
-            value = cfg.hls_seekfromlevel;
+            value = cfg.originalConfig.hls_seekfromlevel;
             if (value != null) {
                 Log.info("hls_seekfromlevel:" + value);
                 HLSSettings.seekFromLevel = value as Number;
             }
 
-            value = cfg.hls_live_flushurlcache;
+            value = cfg.originalConfig.hls_live_flushurlcache;
             if (value != null) {
                 Log.info("hls_live_flushurlcache:" + value);
                 HLSSettings.flushLiveURLCache = value as Boolean;
             }
 
-            value = cfg.hls_live_seekdurationthreshold;
+            value = cfg.originalConfig.hls_live_seekdurationthreshold;
             if (value != null) {
                 Log.info("hls_live_seekdurationthreshold:" + value);
                 _seekInLiveDurationThreshold = value as Number;
             }
 
-            value = cfg.hls_seekmode;
+            value = cfg.originalConfig.hls_seekmode;
             if (value != null) {
                 Log.info("hls_seekmode:" + value);
                 HLSSettings.seekMode = value as String;
             }
-            value = cfg.hls_fragmentloadmaxretry;
+            value = cfg.originalConfig.hls_fragmentloadmaxretry;
             if (value != null) {
                 Log.info("hls_fragmentloadmaxretry:" + value);
                 HLSSettings.fragmentLoadMaxRetry = value as Number;
             }
 
-            value = cfg.hls_manifestloadmaxretry;
+            value = cfg.originalConfig.hls_manifestloadmaxretry;
             if (value != null) {
                 Log.info("hls_manifestloadmaxretry:" + value);
                 HLSSettings.manifestLoadMaxRetry = value as Number;
             }
 
-            value = cfg.hls_capleveltostage;
+            value = cfg.originalConfig.hls_capleveltostage;
             if (value != null) {
                 Log.info("hls_capleveltostage:" + value);
                 if (value as Boolean == true) {
