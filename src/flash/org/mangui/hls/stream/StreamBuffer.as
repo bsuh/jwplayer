@@ -190,7 +190,7 @@ package org.mangui.hls.stream {
             var nextRelativeStartPos: Number = startPosition + (max_pts - min_pts) / 1000;
             var headerAppended : Boolean = false, metaAppended : Boolean = false;
             // compute sliding in case of live playlist, or in case of VoD playlist that slided in the past (live sliding ended playlist)
-            var computeSliding : Boolean = (_hls.type == HLSTypes.LIVE  || _liveSlidingMain || _liveSlidingAltAudio);
+            var computeSliding : Boolean = !HLSSettings.noSliding && (_hls.type == HLSTypes.LIVE  || _liveSlidingMain || _liveSlidingAltAudio);
 
             var fragIdx : int;
             if(fragmentType == HLSLoaderTypes.FRAGMENT_MAIN) {

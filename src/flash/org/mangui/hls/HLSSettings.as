@@ -6,6 +6,8 @@ package org.mangui.hls {
     import org.mangui.hls.constant.HLSMaxLevelCappingMode;
 
     public final class HLSSettings extends Object {
+        public static var noSliding : Boolean = false;
+
         /**
          * autoStartLoad
          *

@@ -250,6 +250,14 @@ package org.mangui.jwplayer.media {
                     HLSSettings.capLevelToStage = true;
                 }
             }
+
+            value = cfg.originalConfig.hls_nosliding;
+            if (value != null) {
+                Log.info("hls_nosliding:" + value);
+                if (value as Boolean == true) {
+                    HLSSettings.noSliding = true;
+                }
+            }
             mute(cfg.mute);
         };
 
