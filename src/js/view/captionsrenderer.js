@@ -108,7 +108,10 @@ const CaptionsRenderer = function (viewModel) {
                 this.resize();
             } else {
                 _jassRenderer._ass = _captionsTrack.data;
+                    this.show();
             }
+            } else {
+              this.hide();
         }
 
         _jassClock.tick(position);
