@@ -78,7 +78,8 @@ define([
                     'f4a': 'video',
                     'mp3': 'sound',
                     'mpeg': 'sound',
-                    'smil': 'rtmp'
+                    'smil': 'rtmp',
+                    'hls': 'hls'
                 };
                 var PLAYABLE = _.keys(flashExtensions);
                 if (!utils.isFlashSupported()) {

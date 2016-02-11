@@ -315,6 +315,8 @@ public dynamic class PlaylistItem {
             case "ogg":
             case "oga":
                 return "vorbis";
+            case "m3u8":
+                return "hls";
         }
         return null;
     }
@@ -334,6 +336,8 @@ public dynamic class PlaylistItem {
                 return "hls";
             case "rtmp":
                 return "rtmp";
+            case "hls":
+                return "hls";
         }
         return null;
     }

@@ -31,7 +31,8 @@ public class JWParser {
         'vp6': 'video',
         'webm': 'video',
         'ogg': 'video',
-        'ogv': 'video'
+        'ogv': 'video',
+        'm3u8': 'hls'
     };
 
     public static function getProvider(item:Object):String {

@@ -193,6 +193,11 @@ module.exports = function(grunt) {
             },
             debug : {
                 options : {
+                    targetCompilerOptions : [
+                        '-define+=JWPLAYER::version,\'' + packageInfo.version + '\'',
+                        '-library-path+=lib/blooddy_crypto.swc',
+                        '-define=CONFIG::LOGGING,true'
+                    ],
                     debug : true
                 },
                 files : {
@@ -200,6 +205,13 @@ module.exports = function(grunt) {
                 }
             },
             release : {
+                options : {
+                    targetCompilerOptions : [
+                        '-define+=JWPLAYER::version,\'' + packageInfo.version + '\'',
+                        '-library-path+=lib/blooddy_crypto.swc',
+                        '-define=CONFIG::LOGGING,false'
+                    ],
+                },
                 files : {
                     'bin-release/jwplayer.flash.swf': 'src/flash/com/longtailvideo/jwplayer/player/Player.as'
                 }

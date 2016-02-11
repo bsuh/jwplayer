@@ -481,7 +481,6 @@ define([
 
     }
 
-
     // Register provider
     var F = function(){};
     F.prototype = DefaultProvider;
