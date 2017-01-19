@@ -51,7 +51,7 @@ package org.mangui.jwplayer.media {
 
         /** Change the current quality. **/
         override public function set currentQuality(quality : Number) : void {
-            _hls.currentLevel(quality - 1);
+            _hls.currentLevel = quality - 1;
             if (!isNaN(_media_position)) {
                 _hls.stream.seek(_media_position);
             }
