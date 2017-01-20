@@ -101,6 +101,9 @@ const CaptionsRenderer = function (viewModel) {
     };
 
     this.update = function (position) {
+            if (position < 0) {
+                position += Math.abs(_model.get('duration'));
+            }
         if (_captionsTrack && _captionsTrack.data) {
             if (!_jassRenderer) {
                 _jassRenderer = new libjass.renderers.WebRenderer(
