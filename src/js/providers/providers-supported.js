@@ -59,7 +59,9 @@ define([
                 // (But only if it's a video with an extension known to work in HTML5)
                 if (video.canPlayType) {
                     var result = video.canPlayType(MimeTypes[type]);
-                    return !!result;
+                    return !!result ||
+                        (MimeTypes[type] === 'application/vnd.apple.mpegurl' &&
+                         window.Hls.isSupported());
                 }
                 return false;
             }

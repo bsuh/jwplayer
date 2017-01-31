@@ -133,7 +133,8 @@ define([
             _activeCuePosition = -1,
             _visualQuality = { level: {} },
             // whether playback can start on iOS
-            _canPlay = false;
+            _canPlay = false,
+            _hlsjs = null;
 
         // Find video tag, or create it if it doesn't exist.  View may not be built yet.
         var element = document.getElementById(_playerId);
@@ -522,6 +523,18 @@ define([
                 _setAttribute('preload', source.preload);
             }
 
+            if (!_isAndroidHLS && source.type === 'hls' &&
+                _videotag.canPlayType &&
+                !_videotag.canPlayType('application/vnd.apple.mpegurl')) {
+                // HLS.js
+                if (!_hlsjs) {
+                    _hlsjs = new window.Hls();
+                }
+                _hlsjs.loadSource(source.file);
+                _hlsjs.attachMedia(_videotag);
+                return;
+            }
+
             var sourceElement = document.createElement('source');
             sourceElement.src = source.file;
             var sourceChanged = (_videotag.src !== sourceElement.src);
@@ -591,6 +604,10 @@ define([
             this.removeTracksListener(_videotag.textTracks, 'change', _this.textTrackChangeHandler);
             this.remove();
             this.off();
+            if (_hlsjs) {
+                _hlsjs.destroy();
+                _hlsjs = null;
+            }
         };
 
         this.init = function(item) {
