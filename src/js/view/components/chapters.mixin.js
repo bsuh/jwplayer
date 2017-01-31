@@ -49,15 +49,19 @@ define([
         },
 
         drawCues: function () {
+            this._model.mediaModel.once('change:duration', this.drawCues, this);
+
             // We won't want to draw them until we have a duration
             var duration = this._model.mediaModel.get('duration');
             if (!duration || duration <= 0) {
-                this._model.mediaModel.once('change:duration', this.drawCues, this);
                 return;
             }
 
             var _this = this;
             _.each(this.cues, function (cue) {
+                if (cue.time > duration) {
+                    return;
+                }
                 cue.align(duration);
                 cue.el.addEventListener('mouseover', function () {
                     _this.activeCue = cue;
