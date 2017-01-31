@@ -624,7 +624,14 @@ define([
             var overlaysElement = _playerElement.getElementsByClassName('jw-overlays')[0];
             overlaysElement.addEventListener('mousemove', _userActivityCallback);
 
-            _displayClickHandler = new ClickHandler(_model, _videoLayer, {useHover: true});
+            // captions rendering
+            _captionsRenderer = new CaptionsRenderer(_model);
+            _captionsRenderer.setup(_playerElement.id, _model.get('captions'));
+
+            // captions should be place behind controls, and not hidden when controls are hidden
+            _controlsLayer.parentNode.insertBefore(_captionsRenderer.element(), _title.element());
+
+            _displayClickHandler = new ClickHandler(_model, _captionsRenderer.element());
             _displayClickHandler.on('click', function() {
                 forward({type : events.JWPLAYER_DISPLAY_CLICK});
                 if(_model.get('controls')) {
@@ -651,13 +658,6 @@ define([
             _logo.setup(rightside);
             rightside.appendChild(_dock.element());
             _controlsLayer.appendChild(rightside);
-
-            // captions rendering
-            _captionsRenderer = new CaptionsRenderer(_model);
-            _captionsRenderer.setup(_playerElement.id, _model.get('captions'));
-
-            // captions should be place behind controls, and not hidden when controls are hidden
-            _controlsLayer.parentNode.insertBefore(_captionsRenderer.element(), _title.element());
 
             // Touch UI mode when we're on mobile and we have a percentage height or we can fit the large UI in
             var height = _model.get('height');

@@ -45,7 +45,8 @@ module.exports = function(grunt) {
                 jshintrc: '.jshintrc'
             },
             player : [
-                'src/js/**/*.js'
+                'src/js/**/*.js',
+                '!src/js/libjass.js'
             ],
             tests : [
                 'test/{,*/}*.js'

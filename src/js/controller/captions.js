@@ -100,7 +100,6 @@ define(['utils/helpers',
         }
 
         function _addTrack(track) {
-            track.data = track.data || [];
             track.name = track.label || track.name || track.language;
             track._id = tracksHelper.createId(track, _tracks.length);
 

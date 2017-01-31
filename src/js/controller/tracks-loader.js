@@ -4,14 +4,31 @@ define([
     'parsers/parsers',
     'parsers/captions/srt',
     'parsers/captions/dfxp',
-    'parsers/captions/vttcue'
-], function(_, utils, parsers, srt, dfxp, VTTCue) {
+    'parsers/captions/vttcue',
+    'libjass'
+], function(_, utils, parsers, srt, dfxp, VTTCue, libjass) {
     var tracksLoader = {};
 
     tracksLoader.loadFile = function(track, successHandler, errorHandler) {
-        track.xhr = utils.ajax(track.file, function(xhr) {
-            xhrSuccess.call(tracksLoader, xhr, track, successHandler, errorHandler);
-        }, errorHandler);
+        var xhr = track.xhr = new XMLHttpRequest();
+        var streamParser = new libjass.parser.StreamParser(
+            new libjass.parser.XhrStream(xhr));
+
+        streamParser.minimalASS.then(function (ass) {
+            delete track.xhr;
+            successHandler(ass);
+        });
+
+        streamParser.ass.then(function (ass) {
+            delete track.xhr;
+            successHandler(ass);
+        }, function (reason) {
+            delete track.xhr;
+            errorHandler(reason);
+        });
+
+        xhr.open('GET', track.file, true);
+        xhr.send();
     };
 
     tracksLoader.cancelXhr = function(tracks) {
@@ -37,74 +54,6 @@ define([
         });
         return vttCues;
     };
-
-    function xhrSuccess(xhr, track, successHandler, errorHandler) {
-        var xmlRoot = xhr.responseXML ? xhr.responseXML.firstChild : null;
-        var cues, vttCues;
-
-        // IE9 sets the firstChild element to the root <xml> tag
-        if (xmlRoot) {
-            if (parsers.localName(xmlRoot) === 'xml') {
-                xmlRoot = xmlRoot.nextSibling;
-            }
-            // Ignore all comments
-            while (xmlRoot.nodeType === xmlRoot.COMMENT_NODE) {
-                xmlRoot = xmlRoot.nextSibling;
-            }
-        }
-
-        try {
-            if (xmlRoot && parsers.localName(xmlRoot) === 'tt') {
-                // parse dfxp track
-                cues = dfxp(xhr.responseXML);
-                vttCues = this.convertToVTTCues(cues);
-                delete track.xhr;
-                successHandler(vttCues);
-            } else {
-                // parse VTT/SRT track
-                var responseText = xhr.responseText;
-
-                // TODO: parse SRT with using vttParser and deprecate srt module
-                if (responseText.indexOf('WEBVTT') >= 0) {
-                    // make VTTCues from VTT track
-                    parseCuesFromText(responseText, track, successHandler, errorHandler);
-                } else {
-                    // make VTTCues from SRT track
-                    cues = srt(responseText);
-                    vttCues = this.convertToVTTCues(cues);
-                    delete track.xhr;
-                    successHandler(vttCues);
-                }
-            }
-        } catch (error) {
-            delete track.xhr;
-            errorHandler(error);
-        }
-    }
-
-    function parseCuesFromText(text, track, successHandler, errorHandler) {
-        require.ensure(['../parsers/captions/vttparser'], function (require) {
-            var VTTParser = require('../parsers/captions/vttparser');
-            var parser = new VTTParser(window);
-            var vttCues = [];
-            parser.oncue = function(cue) {
-                vttCues.push(cue);
-            };
-
-            parser.onflush = function() {
-                delete track.xhr;
-                successHandler(vttCues);
-            };
-
-            try {
-                parser.parse(text).flush();
-            } catch(error) {
-                delete track.xhr;
-                errorHandler(error);
-            }
-
-        }, 'vttparser');
-    }
 
     return tracksLoader;
 });
