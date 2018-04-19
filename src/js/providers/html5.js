@@ -226,6 +226,7 @@ function VideoProvider(_playerId, _playerConfig, mediaElement) {
     let _stale = false;
     let _lastEndOfBuffer = null;
     let _androidHls = false;
+    let _hlsjs = null;
 
     this.isSDK = !!_playerConfig.sdkplatform;
     this.video = _videotag;
@@ -396,6 +397,18 @@ function VideoProvider(_playerId, _playerConfig, mediaElement) {
         }
         _canSeek = false;
 
+        if (!_androidHls && source.type === 'hls' &&
+            _videotag.canPlayType &&
+            !_videotag.canPlayType('application/vnd.apple.mpegurl')) {
+            // HLS.js
+            if (!_hlsjs) {
+                _hlsjs = new window.Hls();
+            }
+            _hlsjs.loadSource(source.file);
+            _hlsjs.attachMedia(_videotag);
+            return;
+        }
+
         var sourceElement = document.createElement('source');
         sourceElement.src = source.file;
         var sourceChanged = (_videotag.src !== sourceElement.src);
@@ -459,6 +472,10 @@ function VideoProvider(_playerId, _playerConfig, mediaElement) {
         this.removeTracksListener(_videotag.audioTracks, 'change', _audioTrackChangeHandler);
         this.removeTracksListener(_videotag.textTracks, 'change', _this.textTrackChangeHandler);
         this.off();
+        if (_hlsjs) {
+            _hlsjs.destroy();
+            _hlsjs = null;
+        }
     };
 
     this.init = function(item) {
