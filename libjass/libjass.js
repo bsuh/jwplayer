@@ -18,7 +18,7 @@
  * limitations under the License.
  */
 (function (root, factory) {
-    var global = this;
+    var global = window;
     if (typeof define === "function" && define.amd) {
         define([], function () {
             return factory(global);
