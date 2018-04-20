@@ -45,6 +45,8 @@ const ChaptersMixin = {
     },
 
     drawCues: function () {
+        this._model._mediaModel.once('change:duration', this.drawCues, this); // eslint-disable-line no-underscore-dangle
+
         // We won't want to draw them until we have a duration
         const duration = this._model.get('duration');
         if (!duration || duration <= 0) {
@@ -52,6 +54,9 @@ const ChaptersMixin = {
         }
 
         this.cues.forEach((cue) => {
+            if (cue.time > duration) {
+                return;
+            }
             cue.align(duration);
             cue.el.addEventListener('mouseover', () => {
                 this.activeCue = cue;
